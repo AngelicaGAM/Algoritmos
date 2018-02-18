@@ -1,262 +1,307 @@
-#include<stdio.h>
-#include<string.h>
 
-int main (){    
-unsigned m=8;     
+#include <stdio.h>
+#include <string.h>
+//Se crea la estructura que usaremos para las listas
+typedef struct barco {
+    char puerto1[50];//Origen
+    char puerto2[50];//Destino
+    int ID;
+    float almacenamiento;
+    int tripulantes;
+    barco *sig;
+    barco *ant;
+}barco;
+
+void Pantallabarcos ( int x , int y);
+void  Menuinteractivo (int *OPCION);
+void Capturainfo ( barco *b1);
+void Imprimeinfo ( barco b1);
+int Insert(barco P1, barco **H, barco **T);
+int DespacharPAD( barco **H, barco **T);// Despachar por adelante
+int DespacharPAT(barco **H, barco **T); //Despachar por atrás
+int ListarBarcos  (barco **H, barco **T);
+
+int main() {
+    int OPCION;
+    barco *HC= NULL , *TC=NULL;// Head y Tail para lista del canal
+    barco *HR= NULL, *TR=NULL;// Head y Tail para lista de retenidos
+    int ExisteC=0 , ExisteR=0 , STATUS; // Se declara el contador para saber cuantas embarcaciones existen
+    barco b1;// Se declara la estructura barco b1 con el cual se insertaran o se despacharan 
     
-char Unirverso[8];
+    Pantallabarcos( ExisteC, ExisteR);
+    Menuinteractivo (&OPCION);   
+    
+    while (OPCION != 8){
+    switch (OPCION) {
+        case 1 ://Insertamos embarcación al canal 
+            Capturainfo(&b1);
+            
+            if (Insert(b1, &HC , &TC) < 0){ 
+            printf ("¡Error no hay memoria!");
+            }
+            else{
+            ExisteC= ExisteC +1;
+            printf ("\nLa embarcación se ha añadido al CANAL");
+            }
+            Pantallabarcos( ExisteC, ExisteR);
+            Menuinteractivo (&OPCION);
+            break;
+        case 2 : //Despachamos embarcación por adelante y preguntamos si se va a zona de retención
+            if (HC != NULL){
+                b1=*HC;
+            }
+            if(DespacharPAD( &HC, &TC) < 0){
+                printf ("\n ¡ERROR Lista Canal Vacía!");
+            }
+            else{
+                ExisteC= ExisteC-1;
+                printf ("\n¿Se enviará a zona de retención? 1= SI  0= NO :  ");
+                scanf ("%d", &STATUS);
+                if (STATUS == 1){
+                    if (Insert(b1, &HR , &TR) < 0){ 
+                        printf ("¡Error no hay memoria!");
+                    }
+                    else{
+                        ExisteR= ExisteR +1;
+                        printf ("\nLa embarcación se ha añadido a zona de RETENCIÓN");
+                    }
+                }
+                else{
+                     printf ("\nLa embarcación de adelante se ha despachado");
+                }
+            }
+            Pantallabarcos( ExisteC, ExisteR);
+            Menuinteractivo (&OPCION);
+            break;
+        case 3 : //Despachamos embarcación por atrás y preguntamos si se va a zona de retención
+             if (TC != NULL){
+                b1=*TC;
+            }
+            if(DespacharPAT( &HC, &TC) < 0){
+                printf ("\n ¡ERROR Lista Canal Vacia!");
+            }
+            else{
+                ExisteC= ExisteC-1;
+                printf ("\n¿Se enviara a zona de retención? 1= SI  0= NO :  ");
+                scanf ("%d", &STATUS);
+                if (STATUS == 1){
+                    if (Insert(b1, &HR , &TR) < 0){ 
+                        printf ("¡Error no hay memoria!");
+                    }
+                    else{
+                        ExisteR= ExisteR +1;
+                        printf ("\nLa embarcación se ha añadido a zona de RETENCIÓN");
+                    }
+                }
+                else {
+                    printf ("\nLa embarcación de atras se ha despachado");
+                }
+            }
+            Pantallabarcos( ExisteC, ExisteR);
+            Menuinteractivo (&OPCION);
+            break;
+                
+        case 4 : //Despacharemos embarcación en zona de retención
+            if(DespacharPAD( &HR, &TR) < 0){
+                printf ("\n ¡ERROR Lista Retenidos Vacia!");
+            }
+            else{
+                ExisteR= ExisteR-1;
+                printf ("\nLa embarcación retenida se ha despachado: ");
+            }
+            Pantallabarcos( ExisteC, ExisteR);
+            Menuinteractivo (&OPCION);
+            break; 
+        case 5 : //Lista todos los barcos del canal
+            printf("\nLista de embarcaciones en el canal: \n");
+            if (ListarBarcos( &HC , &TC) < 0){
+                printf ("\n¡ERROR No hay embarcaciones para listar en el canal!");
+            }
+            Pantallabarcos( ExisteC, ExisteR);
+            Menuinteractivo (&OPCION);
+            break;   
+        case 6 : //Lista todos los barcos de la zona de retención
+            printf("\nLista de embarcaciones en retención: \n");
+            if (ListarBarcos( &HR , &TR) < 0){
+                printf ("\n¡ERROR No hay embarcaciones para listar en retención!");
+            }
+            Pantallabarcos( ExisteC, ExisteR);
+            Menuinteractivo (&OPCION);
+            break;   
+        case 7 : //
+            Pantallabarcos( ExisteC, ExisteR);
+            Menuinteractivo (&OPCION);
+            break;   
+        default :
+            printf ("\n ¡Error, No Existe Esa Opción!\n");
+            Menuinteractivo (&OPCION);
+    }
+    }
 
-Unirverso[0]='a';
-Unirverso[1]='b';
-Unirverso[2]='c';
-Unirverso[3]='d';
-Unirverso[4]='e';
-Unirverso[5]='f';
-Unirverso[6]='g';
-Unirverso[7]='h';
-
-char cadA[8],cadB[8];
-unsigned int cA[8]={0,0,0,0,0,0,0,0}; //a
-unsigned int cB[8]={0,0,0,0,0,0,0,0}; //b
-unsigned int aub[8]; //los que estan en ambos sin repetir 
-unsigned int anb[8]; //solo los que estan en ambos
-unsigned int amb[8]; //lo de a pero no b
-unsigned int ac[8]; //not de a
-
-printf("Conjunto A ");
-scanf("%s",&cadA); 
-printf("Conjunto B ");
-scanf("%s",&cadB);
-int con=0,con2=0;
-while(cadA[con]!='\0'){
-  if(cadA[0]=='-'){
-      for(int y=0;y<8;y++){
-      
-      cadA[y]=0;
-      }
-      
-  }  
-  else{
-  
-    if(cadA[con]==Unirverso[0]){
-      cA[0]=1;
-      con++;  
+    return 0;   
+}
+    
+    
+// Esta función mostrará en pantalla cuantos barcos hay con una representación en caracteres 
+void Pantallabarcos ( int x , int y){
+    
+    printf ("\n\n=========== M A P A ===========\n");
+    if ( x > 0){
+        printf ("___________>>Canal<<___________ \n");
+        for ( int i=1; i<=x ; i++){
+            printf ("  </*/>  ");
         }
-    else if(cadA[con]==Unirverso[1]){
-    cA[1]=1;
-    con++;
-    }  
-  
-    else if(cadA[con]==Unirverso[2]){
-    cA[2]=1;
-    con++;
-    }  
-    else if(cadA[con]==Unirverso[3]){
-    cA[3]=1;
-    con++;
-    }      
-  
-    else if(cadA[con]==Unirverso[4]){
-    cA[4]=1;
-    con++;
-    }  
-    else if(cadA[con]==Unirverso[5]){
-    cA[5]=1;
-    con++;
-      }  
-  
-    else if(cadA[con]==Unirverso[6]){
-    cA[6]=1;
-    con++;
-    }  
-
-    else if(cadA[con]==Unirverso[7]){
-    cA[7]=1;
-    con++;
+        printf ("\n");
     }
-  
- } 
-
-}
-while(cadB[con2]!='\0'){
-    
-    if(cadB[0]=='-'){
-     for(int y=0;y<8;y++){
-      
-      cadB[y]=0;
-      }
-     
+    else {       
+        printf ("___________>>Canal<<___________ \n");
+        printf ("               \n");
     }
-    else{
+     if ( y > 0){
+        printf ("_________>>Retenidos<<_________ \n");
+        for ( int i=1; i<=y ; i++){
+            printf ("  </*/>  ");
+        }
+        printf ("\n");
+    }
+     else {      
+        printf ("_________>>Retenidos<<_________ \n");
+        printf ("               \n");
+    }
+
     
-    if(cadB[con2]==Unirverso[0]){
-    cB[0]=1;
-  con2++;  
-  }
-  else if(cadB[con2]==Unirverso[1]){
-    cB[1]=1;
-  con2++;
-  }  
-  else if(cadB[con2]==Unirverso[2]){
-    cB[2]=1;
-  con2++;
-  }  
-  else if(cadB[con2]==Unirverso[3]){
-    cB[3]=1;
-  con2++;
-  }   
-  else if(cadB[con2]==Unirverso[4]){
-    cB[4]=1;
-  con2++;
-  }  
-  else if(cadB[con2]==Unirverso[5]){
-    cB[5]=1;
-  con2++;
-  }  
-  else if(cadB[con2]==Unirverso[6]){
-    cB[6]=1;
-  con2++;
-  }  
-  else if(cadB[con2]==Unirverso[7]){
-    cB[7]=1;
-  con2++;
-  }
-    
-    } 
-        
-    
-    
-}
-for(int i=0;i<m;i++){
-    aub[i]=cA[i]|cB[i];
-}
-for(int i=0;i<m;i++){
-    anb[i]=cA[i]&cB[i];
-}
-for(int i=0;i<m;i++){
-    amb[i]=cA[i]&(!cB[i]);
-}
-for(int i=0;i<m;i++){
-    ac[i]=!cA[i];
+
+    return ;
 }
 
-        printf("\n");
-    if(aub[0]==1){
-        printf("%c",Unirverso[0]);
-    }
-    if(aub[1]==1){
-        printf("%c",Unirverso[1]);
-    }
-    if(aub[2]==1){
-        printf("%c",Unirverso[2]);
-        }
-    if(aub[3]==1){
-       printf("%c",Unirverso[3]);
-    }    
-     if(aub[4]==1){
-        printf("%c",Unirverso[4]);
-    }
-    if(aub[5]==1){
-        printf("%c",Unirverso[5]);
-    }
-    if(aub[6]==1){
-        printf("%c",Unirverso[6]);  
-    }
-    if(aub[7]==1){
-        printf("%c",Unirverso[7]);
-     }
-    if(aub[0]==0 && aub[1]==0 && aub[2]==0 && aub[3]==0 && aub[4]==0 && aub[5]==0 && aub[6]==0 && aub[7]==0){
-          printf("-");
-      }
-      
-     printf("\n");
-    if(anb[0]==1){
-        printf("%c",Unirverso[0]);
-    }
-    if(anb[1]==1){
-        printf("%c",Unirverso[1]);
-    }
-     if(anb[2]==1){
-        printf("%c",Unirverso[2]);
-    }
-    if(anb[3]==1){
-        printf("%c",Unirverso[3]);
-    }
-     if(anb[4]==1){
-        printf("%c",Unirverso[4]);
-    }
-     if(anb[5]==1){
-        printf("%c",Unirverso[5]);
-    }
-    if(anb[6]==1){
-        printf("%c",Unirverso[6]);
-    }
-    if(anb[7]==1){
-        printf("%c",Unirverso[7]);
-        }
-    
-     if(anb[0]==0 && anb[1]==0 && anb[2]==0 && anb[3]==0 && anb[4]==0 && anb[5]==0 && anb[6]==0 && anb[7]==0){
-          printf("-");
-      }
-      
-     printf("\n");
-    if(amb[0]==1){
-        printf("%c",Unirverso[0]);
-    }
-    if(amb[1]==1){
-        printf("%c",Unirverso[1]);
-    }
-     if(amb[2]==1){
-        printf("%c",Unirverso[2]);
-    }
-    if(amb[3]==1){
-        printf("%c",Unirverso[3]);
-    }
-     if(amb[4]==1){
-        printf("%c",Unirverso[4]);
-    }
-     if(amb[5]==1){
-        printf("%c",Unirverso[5]);
-    }
-    if(amb[6]==1){
-        printf("%c",Unirverso[6]);
-    }
-    if(amb[7]==1){
-        printf("%c",Unirverso[7]);
-        }
-    if(amb[0]==0 && amb[1]==0 && amb[2]==0 && amb[3]==0 && amb[4]==0 && amb[5]==0 && amb[6]==0 && amb[7]==0){
-          printf("-");
-      }
-      
-      printf("\n");
-    if(ac[0]==1){
-        printf("%c",Unirverso[0]);
-    }
-    if(ac[1]==1){
-        printf("%c",Unirverso[1]);
-    }
-     if(ac[2]==1){
-        printf("%c",Unirverso[2]);
-    }
-    if(ac[3]==1){
-        printf("%c",Unirverso[3]);
-    }
-     if(ac[4]==1){
-        printf("%c",Unirverso[4]);
-    }
-     if(ac[5]==1){
-        printf("%c",Unirverso[5]);
-    }
-    if(ac[6]==1){
-        printf("%c",Unirverso[6]);
-    }
-    if(ac[7]==1){
-        printf("%c",Unirverso[7]);
-        }
+//Esta función imprime el menú y escanea la opcion 
+void  Menuinteractivo (int *OPCION){
+   printf ("=============================================================== M E N U ================================================================\n>>1) Ingresar una barcación al canal<<     >>2) Despachar una embarcación por delante<<      >>3) Despachar una embarcación por atrás<<      \n>>4)Despachar una embarcación retenida<<    >>5)Listar embarcaciones del canal<<<      >>6)Listar embarcaciones retenida<<      \n>>7)Consultar embarcación por ID<<      >>8)Salir<< \nDa una opción : ");
+   scanf ("%d", &*OPCION);
+   return ;
+}
+//Esta función captura la información de la estructura barco b1
+void Capturainfo ( barco *b1){
+    getchar();
+   printf ("Da Puerto de Origen: ");
+ 
+   gets(b1->puerto1);
+   printf ("Da Puerto de Destino: ");
+   gets  (b1->puerto2);
+   printf ("Da ID : ");
+   scanf ("%d", &b1->ID);
+   printf ("Da tamaño de almacenamiento: ");
+   scanf ("%f", &b1->almacenamiento);
+   printf ("Da Número de tripulantes: ");
+   scanf ("%d", &b1->tripulantes); 
+   return;
+}
+// Imprime la información de la embarcación
+void Imprimeinfo ( barco b1){
+    printf ("\n Puerto Origen: %s", b1.puerto1);
+    printf ("\n Puerto Destino: %s", b1.puerto2);
+    printf ("\n Número ID: %d", b1.ID);
+    printf ("\n Tamaño de almacenamiento : %f metros cubicos", b1.almacenamiento);
+    printf ( "\n Número de tripulantes: %d", b1.tripulantes);
+    return;
+}
 
-    if(ac[0]==0 && ac[1]==0 && ac[2]==0 && ac[3]==0 && ac[4]==0 && ac[5]==0 && ac[6]==0 && ac[7]==0){
-          printf("-");
-      }
-   return 0;
-   
- }
+
+//Inserta elementos a una lista por adelante
+int Insert(barco P1, barco **H, barco **T){
+	
+        barco *ap1=*H;
+	barco *newCuadro;
+	newCuadro = new barco;
+	*newCuadro = P1;
+
+	if ((*H == NULL) && (*T == NULL)) {
+		newCuadro->sig = NULL;
+		newCuadro->ant = NULL;
+		*H = newCuadro;
+		*T = newCuadro;
+		return 1;
+	}
+
+	while (ap1->sig != NULL) {
+		ap1 = ap1->sig;
+	}
+		
+	newCuadro->sig = NULL;
+	ap1->sig = newCuadro;
+	newCuadro->ant = ap1;
+	*T = newCuadro;
+
+	return 1; 
+}
+
+
+//Esta función elimina elementos de la lista por atras
+int DespacharPAT (barco **H , barco **T){
+    barco *ab1, *ant;
+    ab1= *H;
+    ant= *H;
+    if (*H==NULL && *T==NULL){
+        return -1;
+    }
+    if ( *H == *T){
+        *H=NULL;
+        *T=NULL;
+        delete ab1;
+        return 1;
+    }
+    while (ab1->sig != NULL){
+        ant = ab1;
+        ab1= ab1->sig;
+    }
+    ant->sig=NULL;
+    *T=ant;
+    delete ab1;
+    return 1;
+}
+
+//Esta función elimina elementos de la lista por delante
+int DespacharPAD (barco **H , barco **T){
+    barco *ab1 , *siguiente;
+    ab1= *H;
+    if (*H==NULL && *T==NULL){
+        return -1;
+    }
+    
+    if( *H == *T){
+        *H=NULL;
+        *T=NULL;
+        delete ab1;
+        return 1;
+    }
+    siguiente=ab1->sig;
+    siguiente->ant=NULL;
+    *H=siguiente;
+    delete ab1;
+    return 1;
+}
+//Lista todos los elementos de de derecha a izquierda y los enumera
+int ListarBarcos  (barco **H, barco **T){
+    barco *app;
+    app= *H;
+    int cont=1;
+    if (*H==NULL && *T==NULL){
+        return -1;
+    }
+    if (*H == *T){
+        printf ("\n%d.-\n", cont);
+       Imprimeinfo(*app);
+       return 1;
+    }
+    
+    while (app->sig != NULL){
+       printf ("\n%d.-\n", cont);
+       Imprimeinfo(*app);
+       app=app->sig;
+       cont= cont +1;
+    }
+    printf ("\n%d.-\n", cont);
+    Imprimeinfo(*app);
+    return 1;
+
+}
