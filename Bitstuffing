@@ -1,0 +1,131 @@
+
+/* 
+ * File:   BitStuffing.cpp
+ * Author: angelica
+ *
+ * Created on 19 de febrero de 2018, 10:28 PM
+ */
+
+#include <cstdlib>
+#include<string.h>
+#include<stdio.h>
+
+int main() {
+    
+	char str[50];
+        char str2[70];
+	printf("Ingresa tu mensaje:   ");
+ 	scanf("%s",&str);   
+
+        int n=strlen(str);
+        //printf("%d",n);
+        printf("%d",n);
+	for (int i=0;i<strlen(str);i++) {
+            int ban=0;
+		for (int j=i;j<=(i+5);j++) {
+			if(str[j]=='1') {
+				ban++;
+			}
+		}
+		
+		if(ban==6) {
+		  int nl=strlen(str)+2;
+		   for (;nl>=(i+5);nl--)
+                        {
+			str[nl]=str[nl-1];
+			}
+			str[i+5]='0';
+			i=i+7;
+		}
+	}
+        printf("Prueba:01111110-");
+	printf("%s",str);
+	printf("-0111110");
+        // ya tengo el numero de bits
+        
+        n=strlen(str);
+        str[n+1]='x';
+        char Hec[50];
+        int c=2;
+        Hec[0]='7';
+        Hec[1]='E';
+       
+        while (n != 0){
+        if (str[c]== 'x' && str[c+1]== 'x' && str[c+2]== 'x' && str[c+3]=='x') { 
+            Hec[1]='0'; 
+            }
+        else if (str[c]== 0 && str[c+1]== 0 && str[c+2]== 0 && str[c+3]== 0) { 
+            Hec[1]='0'; 
+            }
+        else if (str[c]== 0 && str[c+1]== 0 && str[c+2]== 0 && str[c+3]== 1) { 
+            Hec[1]='1'; 
+           }
+        else if (str[c]== 0 && str[c+1]== 0 && str[c+2]== 1 && str[c+3]== 0) { 
+            Hec[1]='2'; 
+         }
+        else if (str[c]== 0 && str[c+1]== 0 && str[c+2]== 1 && str[c+3]== 1) { 
+            Hec[1]='3'; 
+            }
+        else if (str[c]== 0 && str[c+1]== 1 && str[c+2]== 0 && str[c+3]== 0) { 
+            Hec[1]='4'; 
+            }
+        else if (str[c]== 0 && str[c+1]== 1 && str[c+2]== 0 && str[c+3]== 1) { 
+            Hec[1]='5'; 
+            }
+        else if (str[c]== 0 && str[c+1]== 1 && str[c+2]== 1 && str[c+3]== 0) { 
+            Hec[1]='6'; 
+            }
+        else if (str[c]== 0 && str[c]== 1 && str[c]== 1 && str[c]== 1) { 
+            Hec[1]='7'; 
+            }
+        else if (str[c]== 1 && str[c]== 0 && str[c]== 0 && str[c]== 0) { 
+            Hec[1]='8'; 
+            }
+        else if (str[c]== 1 && str[c]== 0 && str[c]== 0 && str[c]== 1) { 
+            Hec[1]='9'; 
+            }
+        else if (str[c]== 1 && str[c]== 0 && str[c]== 1 && str[c]== 0) { 
+            Hec[1]='A'; 
+            }
+        else if (str[c]== 1 && str[c]== 0 && str[c]== 1 && str[c]== 1) { 
+            Hec[1]='B'; 
+            }
+        else if (str[c]== 1 && str[c]== 1 && str[c]== 0 && str[c]== 0) { 
+            Hec[1]='C'; 
+            }
+        else if (str[c]== 1 && str[c]== 1 && str[c]== 0 && str[c]== 1) { 
+            Hec[1]='D'; 
+            }
+        else if (str[c]== 1 && str[c]== 1 && str[c]== 1 && str[c]== 0) { 
+            Hec[1]='E'; 
+            }
+        
+        else if (str[c]== 1 && str[c]== 1 && str[c]== 1 && str[c]== 1) { 
+            Hec[1]='F'; 
+            }
+        
+        
+        
+        
+        
+        
+        
+        
+        }
+        
+        
+        
+}
+/*
+
+                if(str[c]==0){
+                    
+                    if(str[c]==0){
+                    
+                        if(str[c]==0){
+                            
+                    
+                    }   
+                
+                    }   
+                }
