@@ -1,0 +1,101 @@
+/* 
+ * File:   main.cpp
+ * Author: angelica
+ *
+ * Created on 23 de mayo de 2017, 05:57 PM
+ */
+#include <stdio.h>
+#include <string.h>
+#define MAXS 100
+
+int plVacia(int *pila,int *top,bool ban);
+int pllena(int *pila,int *top,bool ban);
+void inserta(int *pila,int *top,int dato,bool ban);
+void quita(int *pila,int *top,bool ban);
+void Imprime(int *pila,int top);
+
+void menu(int op);
+int main( ) {
+    unsigned ciclo=0,op;
+    int top;
+    int pila[MAXS];
+    bool ban;
+    int dato;
+
+    while(ciclo==0){
+     printf("1.Agregar Elemento\n 2.Eliminar elemento. ");
+     scanf("%d",&op);   
+    
+     switch (op){
+        case 1: 
+            printf("\nIngresa que elemento vas a agregar: ");
+            scanf("%d",&dato);
+            inserta(pila,&top,dato,ban); 
+            printf("\nValor de Top: %d  \n",top);
+            Imprime(pila,top);   
+            break;
+        case 2:
+            quita(pila,&top,ban);
+            printf("\nValor de Top: %d \n",top);
+            Imprime(pila,top);
+            break;
+        //eliminar 
+       //listas2dobles insertar y recorrido 
+             }           
+    }
+    return 0;
+}
+/*
+void Imprime(int *pila,int *top){
+    printf("\n PILA :");
+    for(int i=0;i<=top;i++) {
+        printf("%d,",pila[i]);
+    }
+
+}*/
+
+int plVacia(int *pila,int *top,bool ban){
+    if(*top==0)
+    {
+      ban=0;
+      return(ban);
+    }
+    
+    ban=1;
+    return(ban);    
+}
+
+int pllena(int *pila,int *top,bool ban){
+    if(*top==MAXS)
+    {
+      ban=0;
+      return(ban);
+    }
+    ban=1;
+    return(ban);
+}
+void inserta(int *pila,int *top,int dato, bool ban){
+    ban=pllena(pila,top,ban);
+    if(ban==0)
+    {
+     printf("\nDesbordamiento - PIlA LLENA");
+    }
+    *top=*top+1;
+    pila[*top]=dato;
+    printf("\n Se inserto\n ");
+}
+void quita(int *pila,int *top,bool ban){
+    if(plVacia(pila,top,ban)==0)
+    {
+    printf("\nPila Vacia\n");
+    }
+    
+    *top=*top-1;
+    printf("\nSE ELIMINO\n");
+}
+void Imprime(int *pila,int top){
+    printf("Pila: ");
+    for(int i=top;i>=0;i--){
+        printf("\n%d\n",pila[i]);
+    }
+}
