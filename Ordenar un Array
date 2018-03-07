@@ -1,0 +1,47 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/* 
+ * File:   main.cpp
+ * Author: angelica
+ *
+ * Created on 15 de octubre de 2017, 07:17 AM
+ */
+
+#include <cstdlib>
+#include<string.h>
+#include<stdio.h>
+
+using namespace std;
+
+/*
+ * 
+ */
+int main(int argc, char** argv) {
+    int aux=0,tam=5;
+    int arr[tam]={5,2,3,1,4};
+    
+    for(int x=0;x<tam;x++){
+        printf(" %d ",arr[x]);
+    }
+    printf("\n");
+    
+    for(int x=1;x<tam;x++){  
+   for(int y=0;y<tam;y++){
+    if(arr[x]<arr[y]){
+         aux=arr[x];
+         arr[x]=arr[y];
+         arr[y]=aux;
+         }
+     }
+  }
+
+    
+    for(int x=0;x<tam;x++){
+        printf(" %d ",arr[x]);
+    }
+    return 0;
+}
