@@ -1,0 +1,154 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/* 
+ * File:   main.cpp
+ * Author: angelica
+ *
+ * Created on 22 de octubre de 2017, 02:20 AM
+ */
+
+#include <cstdlib>
+#include<string.h>
+#include<stdio.h>
+
+using namespace std;
+int Torre(int tablero[8][8],int Actualx, int Actualy, int Mx, int My, int turno, int color);
+/*
+ * 
+ */
+int main(int argc, char** argv) {
+
+     int tablero[8][8];
+  
+     int Dx, Dy;
+    for (int y = 0; y < 8; y++) {
+            for (int x = 0; x < 8; x++) {
+                if (y == 0 || y % 2 == 0) {
+                    if (x == 0 || x % 2 == 0) {
+     
+                       tablero[y][x]='b';
+                    }
+                    else {
+                       // tablero[y][x].setColor('b');
+                        //printf("b",tablero[y][x]);
+                        tablero[y][x]='n';
+                    }
+                }
+                else {
+                    if (x == 0 || x % 2 == 0) {
+                      //  tablero[y][x].setColor('b');
+                          tablero[y][x]='n';
+                    }
+                    else {
+                        //tablero[y][x].setColor('n');
+                         tablero[y][x]='b';
+                    }
+                }
+            }
+        }
+    
+     
+        // inicio
+     tablero[0][0]='T';
+     tablero[7][0]='T';
+     tablero[7][7]='t';
+     tablero[0][7]='t';
+     
+         for(int y = 0; y < 8; y++) {
+           printf("\n");
+             for(int x = 0; x < 8; x++) {
+            printf(" %c ",tablero[x][y]); 
+            }
+             } 
+     
+     int T=1;
+     //color de la pieza inicial 
+     // comprobaciones 
+     // tablero , x inicial, y inicial , x destino , y destino, Turno , color de pie4za inicial 
+     Torre(tablero,0,0,0,5,T,2);
+     
+         for(int y = 0; y < 8; y++) {
+           printf("\n");
+             for(int x = 0; x < 8; x++) {
+            printf(" %c ",tablero[x][y]); 
+            }
+             } 
+     T=2;
+     Torre(tablero,7,7,2,7,T,2);
+     
+         for(int y = 0; y < 8; y++) {
+           printf("\n");
+             for(int x = 0; x < 8; x++) {
+            printf(" %c ",tablero[x][y]); 
+            }
+             } 
+     T=1;
+     Torre(tablero,0,5,5,5,T,1);
+     
+         for(int y = 0; y < 8; y++) {
+           printf("\n");
+             for(int x = 0; x < 8; x++) {
+            printf(" %c ",tablero[x][y]); 
+            }
+             } 
+     
+     
+    return 0;
+}
+
+int Torre(int tablero[8][8],int Actualx, int Actualy, int Mx, int My, int turno, int color){
+
+    int t=turno;
+    //Movimientos Actuales
+    int eq=Actualx,yi=Actualy;
+    //Movimientos Destino
+    int Dx=Mx, Dy=My;
+    
+    printf("Turno :%d\n",t);
+       
+    //VALIDACIONES 
+      // Todos  los mov deben ser menores a 8 y mayor a 0
+     if( (Dx < 8 && Dx >= 0) || (Dy < 8 && Dy >= 0 ) ){
+         //si la pieza Actual es Torre y que no sea las coordenadas de alguna otra pieza 
+         if((tablero[eq][yi]=='T') || (tablero[eq][yi]=='t')) {   
+             // si la ubicacion destino esta disponible la pieza 
+                if((tablero[Dx][Dy]=='n') || (tablero[Dx][Dy]=='b')){
+                    if(color==1){
+                        
+                        tablero[eq][yi]='n';  
+                    }
+                     else if(color==2){
+                        tablero[eq][yi]='b';  
+                    }
+                    
+                    if(t==1){
+                        if(eq==Dx){
+                            tablero[eq][Dy]='T';
+                     
+                            }
+                        else if(yi==Dy){
+                            tablero[Dx][yi]='T';
+                            
+                        }
+                    }
+                    else if(t==2){
+                            if(eq==Dx){
+                            tablero[eq][Dy]='t';
+                     
+                            }
+                          else if(yi==Dy){
+                            tablero[Dx][yi]='t';
+                            
+                        }
+                        
+                    }
+         
+                } 
+     
+         }
+     }
+}
