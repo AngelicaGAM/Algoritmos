@@ -1,0 +1,259 @@
+
+#include <stdio.h>
+#include <string.h>
+typedef struct Alumno {
+	char nombre[50];
+	char ap[50];
+        int id;
+	Alumno *sig;
+	Alumno *ant;
+};
+
+
+void CapturaAlumno(Alumno *a1);
+void CapturaAlumno2(Alumno *a1);
+int inserta(Alumno a1, Alumno **H, Alumno **T);
+void Imprimeinfo ( Alumno a1);
+void moverse_al_inicio(Alumno a1,Alumno **H); 
+void moverse_al_final(Alumno a1,Alumno **T); 
+int imprime_ls_atras(Alumno **H,Alumno **T);
+int imprime_ls_adelante(Alumno **H,Alumno **T);
+int buscar_ls_doble(Alumno **H,Alumno **T, int id);
+int eliminar_ls_doble(Alumno **H,Alumno **T);
+int Eliminarxatras (Alumno **H , Alumno **T);
+
+int main()
+{
+        int OPCION;
+	Alumno *H = NULL;
+	Alumno *T = NULL;
+	Alumno a1;
+
+            printf(" Menu de Opciones:\n");
+	printf("1,)CAPTURA e Inserta.\n");
+	printf("2)  ATRAS.\n");
+        printf("3)  ADELANTE.\n");
+	printf("4) Buscar\n");
+        printf("5) Inicio.sin/imprmir\n");
+        printf("6) Final sin/imprmir.\n");
+        printf("8) SALIR.\n");
+        scanf("%d", &OPCION);
+        while(OPCION!=8){
+        switch(OPCION){
+            case 1:
+                CapturaAlumno(&a1);        
+                 inserta(a1, &H,  &T);
+              
+                CapturaAlumno2(&a1);
+                 inserta(a1, &H,  &T);
+                 
+                printf("\n Opcion a elegir: ");
+			scanf("%d", &OPCION);
+                break;
+      
+            case 2:
+                 printf("\n  ADELANTE  \n" );
+                 imprime_ls_adelante(&H,&T);
+                printf("\n Opcion a elegir: ");
+			scanf("%d", &OPCION);
+                break;
+            case 3:
+                printf("\n  ATRAS  \n" );
+                 imprime_ls_atras(&H,&T);
+                  printf("\n Opcion a elegir: ");
+			scanf("%d", &OPCION);
+                break;  
+            case 4:
+                buscar_ls_doble(&H, &T,1);
+                 printf("\n Opcion a elegir: ");
+			scanf("%d", &OPCION);
+                 break;
+            case 5:
+                moverse_al_inicio(a1,&H); 
+                printf("\nEstas en Inicio \n Opcion a elegir: ");
+			scanf("%d", &OPCION);
+                        break;
+           case 6:
+               moverse_al_final(a1,&T); 
+                printf("\nEstas en el Final \n Opcion a elegir: ");
+			scanf("%d", &OPCION);
+                        break;  
+        
+        }
+        }
+        
+    return 0;
+   
+
+}
+
+void CapturaAlumno(Alumno *a1) {
+    strcpy(a1->nombre,"Alord");
+    strcpy(a1->ap,"Vega");
+    a1->id=1;
+}
+void CapturaAlumno2(Alumno *a1) {
+    strcpy(a1->nombre,"Alord2");
+    strcpy(a1->ap,"Vega2");
+    a1->id=2;
+}
+int inserta(Alumno a1, Alumno **H, Alumno **T) {
+ Alumno *ap1=*H;
+	Alumno *newCuadro;
+	newCuadro = new Alumno;
+	*newCuadro = a1;
+
+	if ((*H == NULL) && (*T == NULL)) {
+		newCuadro->sig = NULL;
+		newCuadro->ant = NULL;
+		*H = newCuadro;
+		*T = newCuadro;
+		return 1;
+	}
+
+	while (ap1->sig != NULL) {
+		ap1 = ap1->sig;
+	}
+		
+	newCuadro->sig = NULL;
+	ap1->sig = newCuadro;
+	newCuadro->ant = ap1;
+	*T = newCuadro;
+
+	return 1; 
+
+}
+void moverse_al_inicio(Alumno a1,Alumno **H){
+    Alumno *apc = *H; 
+   
+}
+
+void moverse_al_final(Alumno a1,Alumno **T){
+    Alumno *apc = *T; 
+    
+}
+void Imprimeinfo ( Alumno a1){
+        printf("\n ");
+    printf ("\n Nombre: %s", a1.nombre);
+    printf ("\n Apellido %s", a1.ap);
+    printf ("\n Número ID: %d", a1.id);
+        printf("\n ");
+    return;
+}
+int imprime_ls_atras(Alumno **H,Alumno **T){
+Alumno *app;
+    app= *T;
+   
+    if (*H==NULL && *T==NULL){
+        return -1;
+    }
+    if (*H == *T){
+      
+       Imprimeinfo(*app);
+       return 1;
+    }
+    
+    while (app->ant != NULL){
+      
+       Imprimeinfo(*app);
+       app=app->ant;
+     
+    }
+    
+    Imprimeinfo(*app);
+    return 1;
+}
+int imprime_ls_adelante(Alumno **H, Alumno **T){
+ Alumno *app;
+    app= *H;
+   
+    if (*H==NULL && *T==NULL){
+        return -1;
+    }
+    if (*H == *T){
+      
+       Imprimeinfo(*app);
+       return 1;
+    }
+    
+    while (app->sig != NULL){
+      
+       Imprimeinfo(*app);
+       app=app->sig;
+     
+    }
+    
+    Imprimeinfo(*app);
+    return 1;
+
+}
+
+int buscar_ls_doble(Alumno **H, Alumno **T,int id){
+Alumno *app;
+    app= *H;
+    
+    if (*H==NULL && *T==NULL){
+        return -1;
+    }
+    if (*H == *T && id == app->id){
+        printf ("ID Encontrado \n");
+       Imprimeinfo(*app);
+       return 1;
+    }
+    
+    while (app->sig != NULL ){
+        if(app->id == id){
+            printf ("\n ID Encontrado \n");
+            Imprimeinfo(*app);
+            app=app->sig;
+             }
+        else
+       app=app->sig;
+       
+    }
+
+    return 1;
+}
+
+int eliminar_ls_doble(Alumno **H,Alumno **T){
+    Alumno *ab1 , *siguiente;
+    ab1= *H;
+    if (*H==NULL && *T==NULL){
+        return -1;
+    }
+    
+    if( *H == *T){
+        *H=NULL;
+        *T=NULL;
+        delete ab1;
+        return 1;
+    }
+    siguiente=ab1->sig;
+    siguiente->ant=NULL;
+    *H=siguiente;
+    delete ab1;
+    return 1; 
+}
+
+int Eliminarxatras (Alumno **H , Alumno **T){
+  Alumno *ab1, *ant;
+    ab1= *H;
+    ant= *H;
+    if (*H==NULL && *T==NULL){
+        return -1;
+    }
+    if ( *H == *T){
+        *H=NULL;
+        *T=NULL;
+        delete ab1;
+        return 1;
+    }
+    while (ab1->sig != NULL){
+        ant = ab1;
+        ab1= ab1->sig;
+    }
+    ant->sig=NULL;
+    *T=ant;
+    delete ab1;
+    return 1;
+}
